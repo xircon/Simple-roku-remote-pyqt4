@@ -2,17 +2,23 @@
 
 import sys
 import os
+import re
 
 from PyQt4 import QtGui, QtCore
 
 #sudo pip install roku first.
 from roku import Roku
 
-#set your IP here if automatic discovery fails.
-roku = Roku('192.168.0.7')
+#set your IP here and rem out automatic discovery if automatic discovery fails.
+#roku = Roku('192.168.0.7')
 
-#Automatic discovery......
-#roku=Roku.discover()
+#Begin Automatic discovery......
+my_roku=Roku.discover(3) #2 second wait mostly works!!!! so use 3.
+s1=str(my_roku)
+s2=re.search(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', s1).group()
+print(s1, "|", s2) #for debug only
+roku=Roku(s2)
+#End Automatic discovery
 
 #Button Width/Height
 bw = 100
@@ -156,6 +162,13 @@ class Window(QtGui.QMainWindow):
         btn11.setIcon(QtGui.QIcon(icon_path + 'info.png'))
         btn11.resize(60,60)
         btn11.move((gui_width-100+260)/2,400)
+
+        ltext = "Roku IP Address " + s2.strip()
+
+        lbl1 = QtGui.QLabel(ltext, self)
+        lbl1.setFixedWidth(gui_width)
+        lbl1.setAlignment(QtCore.Qt.AlignHCenter)  
+        lbl1.move(1,575)
 
         self.show()
 
